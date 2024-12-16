@@ -1,0 +1,2 @@
+Request payload: {'password': '75d5e974-c'}
+Response: 400, {"code":400,"message":"Недостаточно данных для входа"}
