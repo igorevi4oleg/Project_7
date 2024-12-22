@@ -1,12 +1,14 @@
+import requests
 import allure
 from conftest import *
+from data import BASE_URL, COURIER_LOGIN, MISSING_FIELD_LOGIN_MESSAGE
 
-@allure.title("Login courier: successful and unsuccessful")
+@allure.feature("Courier Management")
 class TestLoginCourier:
-    @allure.title("Successful Login Courier")
-    def test_login_successful(self, courier_creation_teardown, unique_courier):
-        courier_creation_teardown(unique_courier)
-        response = requests.post(f"{BASE_URL}/courier/login", json={
+    @allure.story("Successful login courier")
+    def test_login_successful(self, create_courier, unique_courier):
+        create_courier(unique_courier)
+        response = requests.post(f"{BASE_URL}{COURIER_LOGIN}", json={
             "login": unique_courier["login"],
             "password": unique_courier["password"]
         })
@@ -14,13 +16,11 @@ class TestLoginCourier:
         assert "id" in response.json()
 
     @pytest.mark.parametrize("missing_field", ["login", "password"])
-    @allure.title("Unsuccessful login courier: with missing field")
-    def test_login_missing_field(self, courier_creation_teardown, unique_courier, missing_field):
-        courier_creation_teardown(unique_courier)
+    @allure.story("Unsuccessful login courier: missing field")
+    def test_login_missing_field(self, create_courier, unique_courier, missing_field):
+        create_courier(unique_courier)
         login_data = {"login": unique_courier["login"], "password": unique_courier["password"]}
-        login_data.pop(missing_field)
-        print(f"Request payload: {login_data}")  # Отладка
-        response = requests.post(f"{BASE_URL}/courier/login", json=login_data)
-        print(f"Response: {response.status_code}, {response.text}")  # Отладка
+        login_data[missing_field] = ""
+        response = requests.post(f"{BASE_URL}{COURIER_LOGIN}", json=login_data)
         assert response.status_code == 400
-        assert response.json().get("message") == "Недостаточно данных для входа"
+        assert response.json().get("message") == MISSING_FIELD_LOGIN_MESSAGE
