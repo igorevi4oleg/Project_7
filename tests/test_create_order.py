@@ -8,7 +8,7 @@ from data import BASE_URL, COURIER_CREATE, SUCCESSFUL_CREATION_MESSAGE, DUPLICAT
 @allure.feature("Order Management")
 class TestCreateOrder:
     @pytest.mark.parametrize("color", [["BLACK"], ["GREY"], ["BLACK", "GREY"], []])
-    @allure.story("Create order with color options")
+    @allure.title("Create order with color options")
     def test_create_order(self, color):
         payload = {
             "firstName": "Evgenij",

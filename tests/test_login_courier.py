@@ -5,7 +5,7 @@ from data import BASE_URL, COURIER_LOGIN, MISSING_FIELD_LOGIN_MESSAGE
 
 @allure.feature("Courier Management")
 class TestLoginCourier:
-    @allure.story("Successful login courier")
+    @allure.title("Successful login courier")
     def test_login_successful(self, create_courier, unique_courier):
         create_courier(unique_courier)
         response = requests.post(f"{BASE_URL}{COURIER_LOGIN}", json={
@@ -16,7 +16,7 @@ class TestLoginCourier:
         assert "id" in response.json()
 
     @pytest.mark.parametrize("missing_field", ["login", "password"])
-    @allure.story("Unsuccessful login courier: missing field")
+    @allure.title("Unsuccessful login courier: missing field")
     def test_login_missing_field(self, create_courier, unique_courier, missing_field):
         create_courier(unique_courier)
         login_data = {"login": unique_courier["login"], "password": unique_courier["password"]}
